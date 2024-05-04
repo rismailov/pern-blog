@@ -16,7 +16,6 @@ export default function AppLayout({ children }: PropsWithChildren) {
                 breakpoint: 'sm',
                 collapsed: { desktop: true, mobile: !opened },
             }}
-            padding="md"
         >
             <Header opened={opened} toggle={toggle} />
 

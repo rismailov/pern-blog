@@ -1,0 +1,14 @@
+.link {
+    svg {
+        will-change: transform;
+        transition: transform 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    &:hover {
+        text-decoration: none;
+
+        svg {
+            transform: translateX(0.1rem);
+        }
+    }
+}
