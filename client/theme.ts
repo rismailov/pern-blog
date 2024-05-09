@@ -1,15 +1,8 @@
 'use client'
 
 import { Button, Container, createTheme, Title } from '@mantine/core'
-import { Golos_Text as FontSans } from 'next/font/google'
-
-const fontSans = FontSans({
-    subsets: ['latin'],
-    weight: ['400', '500', '600'],
-})
 
 export const theme = createTheme({
-    fontFamily: fontSans.style.fontFamily,
     defaultRadius: 'md',
     components: {
         Container: Container.extend({

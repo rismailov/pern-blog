@@ -1,4 +1,5 @@
 import {
+    Anchor,
     AppShell,
     Burger,
     Container,
@@ -57,12 +58,22 @@ export const Header = ({
                         </Group>
 
                         {/* right side */}
-                        <Burger
-                            opened={opened}
-                            onClick={toggle}
-                            hiddenFrom="sm"
-                            size="sm"
-                        />
+                        <Group>
+                            <Burger
+                                opened={opened}
+                                onClick={toggle}
+                                hiddenFrom="sm"
+                                size="sm"
+                            />
+
+                            <Anchor
+                                component={Link}
+                                href="/articles/create"
+                                fw={500}
+                            >
+                                Create Article
+                            </Anchor>
+                        </Group>
                     </Group>
                 </Container>
             </AppShell.Header>

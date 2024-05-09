@@ -1,0 +1,18 @@
+.dropzoneRoot {
+    &[data-error] {
+        border-color: var(--mantine-color-error);
+    }
+}
+
+.dropzoneInner {
+    height: '100%';
+    display: 'flex';
+    align-items: 'center';
+    justify-content: 'center';
+}
+
+.removeImageButton {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+}

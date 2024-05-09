@@ -12,7 +12,7 @@ export const NavLink = ({
         <UnstyledButton
             component={Link}
             href={href}
-            data-active={isActive}
+            mod={{ active: isActive }}
             className={classes.navLink}
         >
             {children}
