@@ -6,20 +6,19 @@ export const Hero = () => {
             <Center>
                 <Stack align="center" gap={0}>
                     <Title order={1} fz={40}>
-                        MERN Blog
+                        PERN Blog
                     </Title>
 
                     <Text mt="xs" fz="lg" ta="center" maw={700} opacity={0.65}>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Voluptatibus rem sed praesentium nisi quae
-                        blanditiis et, optio maiores provident vel!
+                        A blog website built with PERN stack (Postgres,
+                        ExpressJS, ReactJS, NodeJS).
                     </Text>
 
                     <Button
                         size="md"
                         mt="lg"
                         component="a"
-                        href="https://github.com/rismailov/mern-blog.git"
+                        href="https://github.com/rismailov/pern-blog.git"
                         target="_blank"
                     >
                         Source Code

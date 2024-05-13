@@ -33,7 +33,7 @@ export const Header = ({
                                 href="/"
                                 className={classes.logoLink}
                             >
-                                <Text fw={500}>MERN Blog</Text>
+                                <Text fw={500}>PERN Blog</Text>
                             </UnstyledButton>
 
                             <Group ml="xl" gap="1.6rem" visibleFrom="sm">

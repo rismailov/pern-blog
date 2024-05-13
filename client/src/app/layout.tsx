@@ -4,9 +4,9 @@ import { theme } from '../../theme'
 import AppLayout from '../layouts/AppLayout'
 
 export const metadata = {
-    title: 'Homepage | MERN Blog',
+    title: 'Homepage | PERN Blog',
     description:
-        'A blog website built with MERN stack (MongoDB, ExpressJS, ReactJS, NodeJS)',
+        'A blog website built with PERN stack (Postgres, ExpressJS, ReactJS, NodeJS)',
 }
 
 export default function RootLayout({ children }: { children: any }) {

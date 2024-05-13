@@ -47,6 +47,8 @@ export function validate(schemas: ValidateSchemas) {
             next()
         } catch (error) {
             if (error instanceof ZodError) {
+                console.log(error.errors)
+
                 res.status(422).send(error.errors)
             }
 

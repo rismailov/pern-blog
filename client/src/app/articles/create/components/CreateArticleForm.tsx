@@ -2,16 +2,19 @@
 
 import { ImageDropzone } from '@/components/ImageDropzone'
 import { TextEditor } from '@/components/TextEditor'
+import axios from '@/lib/axios'
 import {
     Box,
     Button,
     Group,
     InputWrapper,
+    LoadingOverlay,
     Stack,
     TagsInput,
     Textarea,
 } from '@mantine/core'
 import { useForm, zodResolver } from '@mantine/form'
+import { useState } from 'react'
 import { z } from 'zod'
 
 const schema = z.object({
@@ -36,6 +39,8 @@ const schema = z.object({
 type TFormValues = z.infer<typeof schema>
 
 export const CreateArticleForm = () => {
+    const [isLoading, setIsLoading] = useState(false)
+
     const form = useForm<TFormValues>({
         validate: zodResolver(schema),
         initialValues: {
@@ -49,11 +54,41 @@ export const CreateArticleForm = () => {
     })
 
     async function onSubmit(data: TFormValues) {
-        console.log(data)
+        if (isLoading) {
+            return
+        }
+
+        setIsLoading(true)
+
+        try {
+            const { previewImage, ...params } = data
+
+            const formData = new FormData()
+            formData.append('previewImage', previewImage)
+
+            const resp = await axios.post('/articles', formData, {
+                params,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+
+            form.reset()
+
+            setIsLoading(false)
+
+            console.log(resp)
+        } catch (error) {
+            console.error(error)
+
+            setIsLoading(false)
+        }
     }
 
     return (
-        <Box>
+        <Box pos="relative">
+            <LoadingOverlay visible={isLoading} />
+
             <form onSubmit={form.onSubmit(onSubmit)}>
                 <Stack>
                     <Textarea
@@ -122,13 +157,6 @@ export const CreateArticleForm = () => {
 
                 <Group mt="lg" align="center" gap="sm">
                     <Button type="submit">Publish Article</Button>
-
-                    <Button
-                        onClick={() => form.setFieldValue('isDraft', true)}
-                        variant="light"
-                    >
-                        Save as draft
-                    </Button>
                 </Group>
             </form>
         </Box>
