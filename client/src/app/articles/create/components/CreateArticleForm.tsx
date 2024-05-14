@@ -4,6 +4,10 @@ import { ImageDropzone } from '@/components/ImageDropzone'
 import { TextEditor } from '@/components/TextEditor'
 import axios from '@/lib/axios'
 import {
+    TArticleClientIn,
+    createArticleSchemaClient,
+} from '@api/articles/articles.schema'
+import {
     Box,
     Button,
     Group,
@@ -15,34 +19,12 @@ import {
 } from '@mantine/core'
 import { useForm, zodResolver } from '@mantine/form'
 import { useState } from 'react'
-import { z } from 'zod'
-
-const schema = z.object({
-    title: z
-        .string()
-        .min(2, { message: 'Title should have at least 2 letters' }),
-    content: z
-        .string()
-        .min(200, { message: 'Content should have at least 200 characters' }),
-    previewText: z
-        .string()
-        .min(80, { message: 'Preview text should have at least 80 letters' }),
-    previewImage: z.any().refine((v) => !!v, {
-        message: 'Preview image is required',
-    }),
-    tags: z.array(z.string()).refine((tags) => tags.length > 0, {
-        message: 'Please enter at least 1 tag',
-    }),
-    isDraft: z.boolean(),
-})
-
-type TFormValues = z.infer<typeof schema>
 
 export const CreateArticleForm = () => {
     const [isLoading, setIsLoading] = useState(false)
 
-    const form = useForm<TFormValues>({
-        validate: zodResolver(schema),
+    const form = useForm<TArticleClientIn>({
+        validate: zodResolver(createArticleSchemaClient),
         initialValues: {
             title: '',
             content: '',
@@ -53,7 +35,7 @@ export const CreateArticleForm = () => {
         },
     })
 
-    async function onSubmit(data: TFormValues) {
+    async function onSubmit(data: TArticleClientIn) {
         if (isLoading) {
             return
         }

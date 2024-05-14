@@ -1,0 +1,20 @@
+{
+    "name": "pern-blog",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "api:dev": "cd api && npm run dev",
+        "client:dev": "cd client && npm run dev",
+        "dev": "concurrently \"npm run api:dev\" \"npm run client:dev\""
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "concurrently": "^8.2.2"
+    },
+    "devDependencies": {
+        "zod": "^3.23.8"
+    }
+}

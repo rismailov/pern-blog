@@ -1,17 +1,17 @@
 import { NextFunction, Request, Response } from 'express'
 import { z } from 'zod'
 
-import prisma from '../../services/prisma'
-import { createArticleSchema } from './articles.schema'
-import ArticleService from './articles.service'
 import { Prisma } from '@prisma/client'
+import prisma from '../../services/prisma'
+import ArticleService from './articles.service'
+import { createArticleSchemaApi } from './articles.schema'
 
 export function getAllArticles(req: Request, res: Response) {
     return res.json([])
 }
 
 export async function createArticle(
-    req: Request<{}, {}, {}, z.infer<typeof createArticleSchema>>,
+    req: Request<{}, {}, {}, z.infer<typeof createArticleSchemaApi>>,
     res: Response,
     next: NextFunction,
 ) {

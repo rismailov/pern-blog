@@ -2,7 +2,7 @@ import express from 'express'
 import multer from 'multer'
 import { validate } from '../../services/middlewares'
 import * as articleController from './articles.controller'
-import { createArticleSchema } from './articles.schema'
+import { createArticleSchemaApi } from './articles.schema'
 
 const router = express.Router()
 const storage = multer.memoryStorage()
@@ -12,7 +12,7 @@ router.get('/', articleController.getAllArticles)
 
 router.post(
     '/',
-    validate({ query: createArticleSchema }),
+    validate({ query: createArticleSchemaApi }),
     upload.single('previewImage'),
     // @ts-ignore
     articleController.createArticle,
