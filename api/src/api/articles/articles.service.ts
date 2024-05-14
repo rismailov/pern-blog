@@ -18,7 +18,8 @@ const s3 = new S3Client({
     region: config.AWS.S3_REGION,
 })
 
-export default class ArticleService {
+// a service to upload file (image) to S3 bucket
+export class UploadFileService {
     file: TFile | null = null
 
     filename: string | null = null
@@ -59,5 +60,15 @@ export default class ArticleService {
         const url = await getSignedUrl(s3, getCommand)
 
         return url
+    }
+}
+
+export default class ArticleService {
+    getMinutesToRead(content: string): string {
+        const wordsPerMinute = 250
+        const wordsCount = content.split(' ').length
+        const minutesToRead = Math.ceil(wordsCount / wordsPerMinute)
+
+        return `${minutesToRead} ${minutesToRead === 1 ? 'minute' : 'minutes'} read`
     }
 }

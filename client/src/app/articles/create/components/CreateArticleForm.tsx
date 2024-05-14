@@ -57,12 +57,10 @@ export const CreateArticleForm = () => {
 
             form.reset()
 
-            setIsLoading(false)
-
             console.log(resp)
         } catch (error) {
             console.error(error)
-
+        } finally {
             setIsLoading(false)
         }
     }

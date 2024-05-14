@@ -1,5 +1,10 @@
 import { z } from 'zod'
 
+/**
+ * =================================================================
+ * Create article schemas
+ * =================================================================
+ */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const _createArticleSchemaBase = z.object({
     title: z
@@ -26,5 +31,14 @@ export const createArticleSchemaClient = _createArticleSchemaBase.merge(
     }),
 )
 
-export type TArticleApiIn = z.infer<typeof createArticleSchemaApi>
 export type TArticleClientIn = z.infer<typeof createArticleSchemaClient>
+
+/**
+ * =================================================================
+ * Get articles schemas
+ * =================================================================
+ */
+export const getArticlesSchema = z.object({
+    // display 3 latest articles for homepage
+    preview: z.coerce.boolean().optional(),
+})

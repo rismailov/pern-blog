@@ -1,13 +1,47 @@
+import { Prisma } from '@prisma/client'
+import { randomBytes } from 'crypto'
+import { format } from 'date-fns'
 import { NextFunction, Request, Response } from 'express'
+import kebabCase from 'lodash.kebabcase'
 import { z } from 'zod'
 
-import { Prisma } from '@prisma/client'
 import prisma from '../../services/prisma'
-import ArticleService from './articles.service'
-import { createArticleSchemaApi } from './articles.schema'
+import { createArticleSchemaApi, getArticlesSchema } from './articles.schema'
+import ArticleService, { UploadFileService } from './articles.service'
 
-export function getAllArticles(req: Request, res: Response) {
-    return res.json([])
+export async function getAllArticles(
+    req: Request<{}, {}, {}, z.infer<typeof getArticlesSchema>>,
+    res: Response,
+) {
+    const articles = await prisma.article.findMany({
+        omit: {
+            updatedAt: true,
+            isDraft: true,
+        },
+        include: {
+            tags: true,
+        },
+        orderBy: {
+            createdAt: 'desc',
+        },
+        // display 3 latest articles for homepage
+        ...(req.query.preview && {
+            take: 3,
+        }),
+    })
+
+    const articleService = new ArticleService()
+    const modifiedArticles = articles.map((article) => {
+        const minutesToRead = articleService.getMinutesToRead(article.content)
+
+        return {
+            ...article,
+            createdAt: format(article.createdAt, 'MMM d, yyyy'),
+            minutesToRead,
+        }
+    })
+
+    return res.json(modifiedArticles)
 }
 
 export async function createArticle(
@@ -25,15 +59,15 @@ export async function createArticle(
         const { tags, ...data } = req.query
 
         // upload image to s3
-        const articleService = new ArticleService(req.file)
-        const ok = await articleService.uploadImageToS3()
+        const uploadFileService = new UploadFileService(req.file)
+        const ok = await uploadFileService.uploadImageToS3()
 
         if (!ok) {
             return res.status(500).send({ message: 'Error uploading file' })
         }
 
         // get url of uploaded image
-        const previewImageUrl = await articleService.generateImageUrl()
+        const previewImageUrl = await uploadFileService.generateImageUrl()
 
         // save the article along with tags
         const article = await prisma.article.create({
@@ -42,6 +76,7 @@ export async function createArticle(
                 content: data.content,
                 previewText: data.previewText,
                 previewImageUrl,
+                slug: `${randomBytes(3).toString('hex')}-${kebabCase(data.title)}`,
                 tags: {
                     connectOrCreate: tags.map((tag) => {
                         return {

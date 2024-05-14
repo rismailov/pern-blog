@@ -1,28 +1,17 @@
+import type { IArticleOut } from '@api/articles/articles.interfaces'
 import { Badge, Box, Card, Group, ScrollArea, Text, Title } from '@mantine/core'
 import { IconCalendar, IconClock } from '@tabler/icons-react'
 import Image from 'next/image'
-import { PropsWithChildren } from 'react'
 import { ArrowLink } from '../ArrowLink'
 import classes from './ArticleCard.module.css'
 
-export const ArticleCard = ({
-    title,
-    tags,
-    date,
-    imageUrl,
-    children,
-}: PropsWithChildren<{
-    title: string
-    tags: string[]
-    date: string
-    imageUrl: string
-}>) => {
+export const ArticleCard = (article: IArticleOut) => {
     return (
         <Card p={0} radius="md" className={classes.card}>
             {/* cover image */}
             <Box bg="gray" w="100%" h={200} pos="relative">
                 <Image
-                    src={imageUrl}
+                    src={article.previewImageUrl}
                     fill
                     alt="Demo article image"
                     objectFit="cover"
@@ -33,20 +22,20 @@ export const ArticleCard = ({
             <Box p="lg">
                 <ScrollArea>
                     <Group wrap="nowrap" gap="0.35rem">
-                        {tags.map((tag) => (
-                            <Badge key={tag} variant="light" fw={600}>
-                                {tag}
+                        {article.tags.map((tag) => (
+                            <Badge key={tag.id} variant="light" fw={600}>
+                                {tag.label}
                             </Badge>
                         ))}
                     </Group>
                 </ScrollArea>
 
                 <Title mt="lg" order={3} lh="1.25">
-                    {title}
+                    {article.title}
                 </Title>
 
                 <Text mt="sm" lineClamp={3}>
-                    {children}
+                    {article.previewText}
                 </Text>
 
                 <Group mt="md" align="center" justify="space-between">
@@ -55,7 +44,7 @@ export const ArticleCard = ({
                         <IconClock size={18} className={classes.iconClock} />
 
                         <Text c="dimmed" fz="sm" fw={500}>
-                            {`${Math.floor(Math.random() * 6) + 1} minutes read`}
+                            {article.minutesToRead}
                         </Text>
                     </Group>
 
@@ -64,12 +53,16 @@ export const ArticleCard = ({
                         <IconCalendar size={18} className={classes.iconClock} />
 
                         <Text c="dimmed" fz="sm" fw={500}>
-                            {date}
+                            {article.createdAt}
                         </Text>
                     </Group>
                 </Group>
 
-                <ArrowLink display="inline-block" mt="md" href="/">
+                <ArrowLink
+                    display="inline-block"
+                    mt="md"
+                    href={`/blog/${article.slug}`}
+                >
                     Read article
                 </ArrowLink>
             </Box>

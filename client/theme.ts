@@ -1,6 +1,13 @@
 'use client'
 
-import { Button, Container, createTheme, Title } from '@mantine/core'
+import {
+    Alert,
+    Button,
+    Container,
+    createTheme,
+    Loader,
+    Title,
+} from '@mantine/core'
 
 export const theme = createTheme({
     defaultRadius: 'md',
@@ -36,6 +43,20 @@ export const theme = createTheme({
                 }
 
                 return { root: {} }
+            },
+        }),
+
+        Loader: Loader.extend({
+            defaultProps: {
+                size: 'sm',
+            },
+        }),
+
+        Alert: Alert.extend({
+            styles: {
+                title: {
+                    fontWeight: 600,
+                },
             },
         }),
     },

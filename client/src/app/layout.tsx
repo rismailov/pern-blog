@@ -2,6 +2,7 @@ import { ColorSchemeScript, MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css'
 import { theme } from '../../theme'
 import AppLayout from '../layouts/AppLayout'
+import Providers from './providers'
 
 export const metadata = {
     title: 'Homepage | PERN Blog',
@@ -25,7 +26,9 @@ export default function RootLayout({ children }: { children: any }) {
 
             <body>
                 <MantineProvider theme={theme}>
-                    <AppLayout>{children}</AppLayout>
+                    <Providers>
+                        <AppLayout>{children}</AppLayout>
+                    </Providers>
                 </MantineProvider>
             </body>
         </html>
