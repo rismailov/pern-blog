@@ -7,7 +7,7 @@ import { z } from 'zod'
 
 import prisma from '../../services/prisma'
 import { createArticleSchemaApi, getArticlesSchema } from './articles.schema'
-import ArticleService, { UploadFileService } from './articles.service'
+import ArticleService from './articles.service'
 
 export async function getAllArticles(
     req: Request<{}, {}, {}, z.infer<typeof getArticlesSchema>>,
@@ -33,11 +33,13 @@ export async function getAllArticles(
     const articleService = new ArticleService()
     const modifiedArticles = articles.map((article) => {
         const minutesToRead = articleService.getMinutesToRead(article.content)
+        const previewImageUrl = articleService.getImageUrl(article.previewImage)
 
         return {
             ...article,
             createdAt: format(article.createdAt, 'MMM d, yyyy'),
             minutesToRead,
+            previewImageUrl,
         }
     })
 
@@ -59,15 +61,12 @@ export async function createArticle(
         const { tags, ...data } = req.query
 
         // upload image to s3
-        const uploadFileService = new UploadFileService(req.file)
-        const ok = await uploadFileService.uploadImageToS3()
+        const uploadFileService = new ArticleService()
+        const filename = await uploadFileService.uploadImageToS3(req.file)
 
-        if (!ok) {
+        if (!filename) {
             return res.status(500).send({ message: 'Error uploading file' })
         }
-
-        // get url of uploaded image
-        const previewImageUrl = await uploadFileService.generateImageUrl()
 
         // save the article along with tags
         const article = await prisma.article.create({
@@ -75,7 +74,7 @@ export async function createArticle(
                 title: data.title,
                 content: data.content,
                 previewText: data.previewText,
-                previewImageUrl,
+                previewImage: filename as string,
                 slug: `${randomBytes(3).toString('hex')}-${kebabCase(data.title)}`,
                 tags: {
                     connectOrCreate: tags.map((tag) => {
