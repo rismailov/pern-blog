@@ -1,4 +1,4 @@
-interface IArticleTag {
+export interface IArticleTagOut {
     id: number
     label: string
 }
@@ -13,5 +13,5 @@ export interface IArticleOut {
     minutesToRead: string
     createdAt: string
 
-    tags: IArticleTag[]
+    tags: IArticleTagOut[]
 }

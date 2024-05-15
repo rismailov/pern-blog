@@ -1,7 +1,7 @@
 'use client'
 
-import { ImageDropzone } from '@/components/ImageDropzone'
-import { TextEditor } from '@/components/TextEditor'
+import { ImageDropzone } from '@/app/(admin)/components/ImageDropzone'
+import { TextEditor } from '@/app/(admin)/components/TextEditor'
 import axios from '@/lib/axios'
 import {
     TArticleClientIn,

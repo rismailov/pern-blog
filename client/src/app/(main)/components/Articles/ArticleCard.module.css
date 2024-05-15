@@ -1,0 +1,11 @@
+.wrapper {
+    &:hover {
+        .title {
+            text-decoration: underline;
+        }
+    }
+}
+
+.sprite {
+    stroke: var(--mantine-color-dimmed);
+}

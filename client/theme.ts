@@ -11,6 +11,7 @@ import {
 
 export const theme = createTheme({
     defaultRadius: 'md',
+    primaryColor: 'red',
     components: {
         Container: Container.extend({
             defaultProps: {

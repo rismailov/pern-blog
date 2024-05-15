@@ -1,7 +1,6 @@
 import { ColorSchemeScript, MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css'
 import { theme } from '../../theme'
-import AppLayout from '../layouts/AppLayout'
 import Providers from './providers'
 
 export const metadata = {
@@ -26,9 +25,7 @@ export default function RootLayout({ children }: { children: any }) {
 
             <body>
                 <MantineProvider theme={theme}>
-                    <Providers>
-                        <AppLayout>{children}</AppLayout>
-                    </Providers>
+                    <Providers>{children}</Providers>
                 </MantineProvider>
             </body>
         </html>

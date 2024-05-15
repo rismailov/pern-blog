@@ -1,14 +1,14 @@
 'use client'
 
-import { ArticleCard } from '@/components/ArticleCard'
 import { FetchErrorMessage } from '@/components/FetchErrorMessage'
 import { SectionLoader } from '@/components/SectionLoader'
 import axios from '@/lib/axios'
 import type { IArticleOut } from '@api/articles/articles.interfaces'
-import { SimpleGrid } from '@mantine/core'
+import { Stack } from '@mantine/core'
 import { useQuery } from '@tanstack/react-query'
+import { ArticleCard } from './ArticleCard'
 
-export default function BlogPage() {
+export const Articles = () => {
     const {
         data: articles,
         isLoading,
@@ -21,7 +21,7 @@ export default function BlogPage() {
     })
 
     if (isLoading) {
-        return <SectionLoader />
+        return <SectionLoader mih={200} />
     }
 
     if (isError) {
@@ -33,10 +33,10 @@ export default function BlogPage() {
     }
 
     return (
-        <SimpleGrid mt="lg" cols={{ base: 1, sm: 2, lg: 3 }} spacing="xl">
+        <Stack gap="xl">
             {articles!.map((article) => (
                 <ArticleCard key={article.id} {...article} />
             ))}
-        </SimpleGrid>
+        </Stack>
     )
 }

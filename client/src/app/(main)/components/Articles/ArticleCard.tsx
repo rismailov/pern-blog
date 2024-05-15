@@ -1,26 +1,39 @@
 import type { IArticleOut } from '@api/articles/articles.interfaces'
-import { Badge, Box, Card, Group, ScrollArea, Text, Title } from '@mantine/core'
+import {
+    Badge,
+    Card,
+    Group,
+    Image as MantineImage,
+    ScrollArea,
+    Text,
+    Title,
+    UnstyledButton,
+} from '@mantine/core'
 import { IconCalendar, IconClock } from '@tabler/icons-react'
 import Image from 'next/image'
-import { ArrowLink } from '../ArrowLink'
+import Link from 'next/link'
 import classes from './ArticleCard.module.css'
 
 export const ArticleCard = (article: IArticleOut) => {
     return (
-        <Card p={0} radius="md" className={classes.card}>
-            {/* cover image */}
-            <Box bg="gray" w="100%" h={200} pos="relative">
-                <Image
+        <UnstyledButton
+            component={Link}
+            href={`/blog/${article.slug}`}
+            className={classes.wrapper}
+        >
+            <Card p={0} radius="0" maw={550}>
+                <MantineImage
                     src={article.previewImageUrl}
-                    fill
+                    width={0}
+                    height={0}
                     alt="Demo article image"
+                    component={Image}
                     objectFit="cover"
+                    h={200}
+                    sizes="100vw"
                 />
-            </Box>
 
-            {/* content */}
-            <Box p="lg">
-                <ScrollArea>
+                <ScrollArea mt="lg">
                     <Group wrap="nowrap" gap="0.35rem">
                         {article.tags.map((tag) => (
                             <Badge key={tag.id} variant="light" fw={600}>
@@ -30,7 +43,7 @@ export const ArticleCard = (article: IArticleOut) => {
                     </Group>
                 </ScrollArea>
 
-                <Title mt="lg" order={3} lh="1.25">
+                <Title mt="md" order={2} lh="1.25" className={classes.title}>
                     {article.title}
                 </Title>
 
@@ -41,31 +54,23 @@ export const ArticleCard = (article: IArticleOut) => {
                 <Group mt="md" align="center" justify="space-between">
                     {/* time to read */}
                     <Group align="center" gap={8}>
-                        <IconClock size={18} className={classes.iconClock} />
+                        <IconClock size={18} className={classes.sprite} />
 
-                        <Text c="dimmed" fz="sm" fw={500}>
+                        <Text c="dimmed" fw={500}>
                             {article.minutesToRead}
                         </Text>
                     </Group>
 
                     {/* written at */}
                     <Group align="center" gap={8}>
-                        <IconCalendar size={18} className={classes.iconClock} />
+                        <IconCalendar size={18} className={classes.sprite} />
 
-                        <Text c="dimmed" fz="sm" fw={500}>
+                        <Text c="dimmed" fw={500}>
                             {article.createdAt}
                         </Text>
                     </Group>
                 </Group>
-
-                <ArrowLink
-                    display="inline-block"
-                    mt="md"
-                    href={`/blog/${article.slug}`}
-                >
-                    Read article
-                </ArrowLink>
-            </Box>
-        </Card>
+            </Card>
+        </UnstyledButton>
     )
 }
