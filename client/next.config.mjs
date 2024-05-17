@@ -6,6 +6,10 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
+                hostname: 'picsum.photos',
+            },
+            {
+                protocol: 'https',
                 hostname: 'mern-blog-storage.s3.eu-north-1.amazonaws.com',
             },
         ],

@@ -37,7 +37,10 @@ export default class ArticleService {
     }
 
     getImageUrl(filename: string): string {
-        return `https://${config.AWS.S3_BUCKET_NAME}.s3.${config.AWS.S3_REGION}.amazonaws.com/${filename}`
+        // if filename includes https - this image comes from seeded data, in that case just use the full url
+        return filename.includes('https')
+            ? filename
+            : `https://${config.AWS.S3_BUCKET_NAME}.s3.${config.AWS.S3_REGION}.amazonaws.com/${filename}`
     }
 
     getMinutesToRead(content: string): string {

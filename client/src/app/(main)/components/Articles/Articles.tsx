@@ -8,16 +8,26 @@ import { useArticles } from '../../hooks/use-articles'
 import { ArticleCard } from './ArticleCard'
 
 export const Articles = () => {
-    const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
-        useArticles()
+    const {
+        data,
+        status,
+        fetchNextPage,
+        isLoading,
+        isFetching,
+        isFetchingNextPage,
+        hasNextPage,
+    } = useArticles()
 
-    const { ref, inView } = useInView({ threshold: 1, rootMargin: '0px' })
+    const { ref, inView } = useInView()
 
     useEffect(() => {
-        if (inView && hasNextPage) {
+        if (!isFetching && !isLoading && inView && hasNextPage) {
+            // FIX: fetching twice when inView (only in dev?)
+            console.count('About to fetch next page...')
+
             fetchNextPage()
         }
-    }, [hasNextPage, inView, fetchNextPage])
+    }, [hasNextPage, inView, fetchNextPage, isFetching, isLoading])
 
     if (status === 'pending') {
         return (
@@ -59,7 +69,11 @@ export const Articles = () => {
                 {isFetchingNextPage && <Loader mb="5rem" />}
 
                 {!isFetchingNextPage && hasNextPage && (
-                    <Button variant="light" onClick={() => fetchNextPage()}>
+                    <Button
+                        variant="light"
+                        onClick={() => fetchNextPage()}
+                        mb="5rem"
+                    >
                         Load More
                     </Button>
                 )}
