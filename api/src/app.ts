@@ -5,16 +5,13 @@ import morgan from 'morgan'
 
 import apiRouter from './api/api.router'
 import * as middlewares from './services/middlewares'
+import config from './services/config'
 
 const app = express()
 
-app.use(morgan('dev'))
+app.use(morgan(config.APP_ENV === 'development' ? 'dev' : 'combined'))
 app.use(helmet())
-app.use(
-    cors({
-        origin: ['http://localhost:3000'],
-    }),
-)
+app.use(cors({ origin: [config.FRONTEND_URL] }))
 app.use(express.json())
 
 app.use('/api/v1', apiRouter)
