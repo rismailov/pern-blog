@@ -1,30 +1,33 @@
 'use client'
 
 import { FetchErrorMessage } from '@/components/FetchErrorMessage'
-import { SectionLoader } from '@/components/SectionLoader'
-import axios from '@/lib/axios'
-import type { IArticleOut } from '@api/articles/articles.interfaces'
-import { Stack } from '@mantine/core'
-import { useQuery } from '@tanstack/react-query'
+import { Button, Center, Loader, Stack } from '@mantine/core'
+import { Fragment, useEffect } from 'react'
+import { useInView } from 'react-intersection-observer'
+import { useArticles } from '../../hooks/use-articles'
 import { ArticleCard } from './ArticleCard'
 
 export const Articles = () => {
-    const {
-        data: articles,
-        isLoading,
-        isError,
-    } = useQuery({
-        initialData: [],
-        queryKey: ['articles'],
-        queryFn: (): Promise<IArticleOut[]> => axios.get('/articles'),
-        retry: false,
-    })
+    const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
+        useArticles()
 
-    if (isLoading) {
-        return <SectionLoader mih={200} />
+    const { ref, inView } = useInView({ threshold: 1, rootMargin: '0px' })
+
+    useEffect(() => {
+        if (inView && hasNextPage) {
+            fetchNextPage()
+        }
+    }, [hasNextPage, inView, fetchNextPage])
+
+    if (status === 'pending') {
+        return (
+            <Center mih="6rem" maw={600} w="100%">
+                <Loader />
+            </Center>
+        )
     }
 
-    if (isError) {
+    if (status === 'error') {
         return (
             <FetchErrorMessage>
                 Something went wrong fetching articles.
@@ -32,11 +35,35 @@ export const Articles = () => {
         )
     }
 
+    if (status === 'success' && !data.pages.length) {
+        return <FetchErrorMessage>No articles found.</FetchErrorMessage>
+    }
+
     return (
-        <Stack gap="xl">
-            {articles!.map((article) => (
-                <ArticleCard key={article.id} {...article} />
-            ))}
+        <Stack>
+            <Stack pos="relative">
+                {data.pages.map((group, i) => (
+                    <Fragment key={i}>
+                        {group.articles.map((article, idx) => (
+                            <ArticleCard
+                                key={article.id}
+                                article={article}
+                                isImagePriority={idx <= 1}
+                            />
+                        ))}
+                    </Fragment>
+                ))}
+            </Stack>
+
+            <Center ref={ref}>
+                {isFetchingNextPage && <Loader mb="5rem" />}
+
+                {!isFetchingNextPage && hasNextPage && (
+                    <Button variant="light" onClick={() => fetchNextPage()}>
+                        Load More
+                    </Button>
+                )}
+            </Center>
         </Stack>
     )
 }

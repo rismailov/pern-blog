@@ -1,10 +1,14 @@
+'use client'
+
 import type { IArticleOut } from '@api/articles/articles.interfaces'
 import {
     Badge,
+    Box,
     Card,
     Group,
     Image as MantineImage,
     ScrollArea,
+    Skeleton,
     Text,
     Title,
     UnstyledButton,
@@ -12,26 +16,48 @@ import {
 import { IconCalendar, IconClock } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useState } from 'react'
 import classes from './ArticleCard.module.css'
 
-export const ArticleCard = (article: IArticleOut) => {
+export const ArticleCard = ({
+    article,
+    isImagePriority,
+}: {
+    article: IArticleOut
+    // make first 2 articles priority since they'll be rendered above the fold
+    isImagePriority: boolean
+}) => {
+    const [showImageSkeleton, setShowImageSkeleton] = useState(true)
+
     return (
         <UnstyledButton
             component={Link}
             href={`/blog/${article.slug}`}
             className={classes.wrapper}
+            mb="4rem"
         >
-            <Card p={0} radius="0" maw={550}>
-                <MantineImage
-                    src={article.previewImageUrl}
-                    width={0}
-                    height={0}
-                    alt="Demo article image"
-                    component={Image}
-                    objectFit="cover"
-                    h={200}
-                    sizes="100vw"
-                />
+            <Card p={0} radius="0" maw={600}>
+                <Skeleton
+                    component={Box}
+                    pos="relative"
+                    h={300}
+                    visible={showImageSkeleton}
+                    style={{ overflow: 'hidden' }}
+                    radius={0}
+                >
+                    <MantineImage
+                        component={Image}
+                        src={article.previewImageUrl}
+                        fill
+                        priority={isImagePriority}
+                        sizes="(max-width: 680px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        style={{ objectFit: 'cover' }}
+                        alt="Demo article image"
+                        onLoad={() => {
+                            setShowImageSkeleton(false)
+                        }}
+                    />
+                </Skeleton>
 
                 <ScrollArea mt="lg">
                     <Group wrap="nowrap" gap="0.35rem">

@@ -6,31 +6,54 @@ import kebabCase from 'lodash.kebabcase'
 import { z } from 'zod'
 
 import prisma from '../../services/prisma'
+import { IArticleOut } from './articles.interfaces'
 import { createArticleSchemaApi, getArticlesSchema } from './articles.schema'
 import ArticleService from './articles.service'
 
+export type TGetArticlesResponse = {
+    articles: IArticleOut[]
+    nextCursor: string
+    totalCount: number
+}
+
 export async function getAllArticles(
     req: Request<{}, {}, {}, z.infer<typeof getArticlesSchema>>,
-    res: Response,
+    res: Response<TGetArticlesResponse>,
 ) {
-    const articles = await prisma.article.findMany({
-        omit: {
-            updatedAt: true,
-            isDraft: true,
-        },
-        include: {
-            tags: true,
-        },
-        orderBy: {
-            createdAt: 'desc',
-        },
-        // display 3 latest articles for homepage
-        ...(req.query.preview && {
-            take: 3,
+    const perPage = 5
+
+    const [totalCount, articles] = await prisma.$transaction([
+        prisma.article.count(),
+        prisma.article.findMany({
+            omit: {
+                updatedAt: true,
+                isDraft: true,
+            },
+            include: { tags: true },
+            orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+            take: perPage,
+            ...(req.query.cursor && {
+                skip: 1,
+                cursor: {
+                    id: req.query.cursor,
+                },
+            }),
+            ...(req.query.tags && {
+                where: {
+                    tags: {
+                        some: {
+                            id: {
+                                in: req.query.tags.map((id) => Number(id)),
+                            },
+                        },
+                    },
+                },
+            }),
         }),
-    })
+    ])
 
     const articleService = new ArticleService()
+
     const modifiedArticles = articles.map((article) => {
         const minutesToRead = articleService.getMinutesToRead(article.content)
         const previewImageUrl = articleService.getImageUrl(article.previewImage)
@@ -43,7 +66,14 @@ export async function getAllArticles(
         }
     })
 
-    return res.json(modifiedArticles)
+    // https://www.prisma.io/docs/orm/prisma-client/queries/pagination#cursor-based-pagination
+    const nextCursor = articles[perPage - 1]?.id ?? null
+
+    return res.json({
+        articles: modifiedArticles,
+        nextCursor,
+        totalCount,
+    })
 }
 
 export async function createArticle(

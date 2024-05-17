@@ -16,7 +16,7 @@ model Article {
     previewText  String
     previewImage String
     isDraft      Boolean  @default(false)
-    createdAt    DateTime @default(now())
+    createdAt    DateTime @unique @default(now())
     updatedAt    DateTime @updatedAt
 
     tags Tag[]

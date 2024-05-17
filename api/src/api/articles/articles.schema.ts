@@ -39,6 +39,6 @@ export type TArticleClientIn = z.infer<typeof createArticleSchemaClient>
  * =================================================================
  */
 export const getArticlesSchema = z.object({
-    // display 3 latest articles for homepage
-    preview: z.coerce.boolean().optional(),
+    tags: z.array(z.string()).optional(),
+    cursor: z.string().optional(),
 })
