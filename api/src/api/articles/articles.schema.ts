@@ -1,9 +1,7 @@
 import { z } from 'zod'
 
 /**
- * =================================================================
- * Create article schemas
- * =================================================================
+ * Create article
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const _createArticleSchemaBase = z.object({
@@ -34,11 +32,17 @@ export const createArticleSchemaClient = _createArticleSchemaBase.merge(
 export type TArticleClientIn = z.infer<typeof createArticleSchemaClient>
 
 /**
- * =================================================================
- * Get articles schemas
- * =================================================================
+ * Get articles
  */
 export const getArticlesSchema = z.object({
     tags: z.array(z.string()).optional(),
     cursor: z.string().optional(),
+})
+
+/**
+ * Show article
+ */
+
+export const showArticleSchema = z.object({
+    slug: z.string(),
 })

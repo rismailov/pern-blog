@@ -13,7 +13,6 @@ import {
     Title,
     UnstyledButton,
 } from '@mantine/core'
-import { IconCalendar, IconClock } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { forwardRef, useState } from 'react'
@@ -83,27 +82,19 @@ export const ArticleCard = forwardRef<HTMLAnchorElement, TProps>(
                         {article.previewText}
                     </Text>
 
-                    <Group mt="md" align="center" justify="space-between">
+                    <Group mt="md" align="center" gap="0.55rem">
                         {/* time to read */}
-                        <Group align="center" gap={8}>
-                            <IconClock size={18} className={classes.sprite} />
+                        <Text c="dimmed" fw={450} fz="0.95rem">
+                            {article.createdAt}
+                        </Text>
 
-                            <Text c="dimmed" fw={500}>
-                                {article.minutesToRead}
-                            </Text>
-                        </Group>
+                        <Text c="dimmed" fw={450} fz="0.95rem">
+                            •
+                        </Text>
 
-                        {/* written at */}
-                        <Group align="center" gap={8}>
-                            <IconCalendar
-                                size={18}
-                                className={classes.sprite}
-                            />
-
-                            <Text c="dimmed" fw={500}>
-                                {article.createdAt}
-                            </Text>
-                        </Group>
+                        <Text c="dimmed" fw={450} fz="0.95rem">
+                            {article.minutesToRead}
+                        </Text>
                     </Group>
                 </Card>
             </UnstyledButton>

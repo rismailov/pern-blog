@@ -1,7 +1,7 @@
 'use client'
 
 import { FetchErrorMessage } from '@/components/FetchErrorMessage'
-import { Button, Center, Loader, Stack } from '@mantine/core'
+import { Center, Loader, Stack } from '@mantine/core'
 import { Fragment, useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useArticles } from '../../hooks/use-articles'
@@ -55,18 +55,8 @@ export const Articles = () => {
                 ))}
             </Stack>
 
-            <Center ref={ref}>
-                {isFetchingNextPage && <Loader mb="5rem" />}
-
-                {!isFetchingNextPage && hasNextPage && (
-                    <Button
-                        variant="light"
-                        onClick={() => fetchNextPage()}
-                        mb="5rem"
-                    >
-                        Load More
-                    </Button>
-                )}
+            <Center ref={ref} mb="5rem">
+                {isFetchingNextPage && <Loader />}
             </Center>
         </Stack>
     )

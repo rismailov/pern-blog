@@ -1,13 +1,16 @@
 import { Prisma } from '@prisma/client'
 import { randomBytes } from 'crypto'
-import { format } from 'date-fns'
 import { NextFunction, Request, Response } from 'express'
 import kebabCase from 'lodash.kebabcase'
 import { z } from 'zod'
 
 import prisma from '../../services/prisma'
 import { IArticleOut } from './articles.interfaces'
-import { createArticleSchemaApi, getArticlesSchema } from './articles.schema'
+import {
+    createArticleSchemaApi,
+    getArticlesSchema,
+    showArticleSchema,
+} from './articles.schema'
 import ArticleService from './articles.service'
 
 export type TGetArticlesResponse = {
@@ -57,12 +60,13 @@ export async function getAllArticles(
     const modifiedArticles = articles.map((article) => {
         const minutesToRead = articleService.getMinutesToRead(article.content)
         const previewImageUrl = articleService.getImageUrl(article.previewImage)
+        const createdAt = articleService.getFormattedDate(article.createdAt)
 
         return {
             ...article,
-            createdAt: format(article.createdAt, 'MMM d, yyyy'),
             minutesToRead,
             previewImageUrl,
+            createdAt,
         }
     })
 
@@ -129,4 +133,37 @@ export async function createArticle(
 
         next(error)
     }
+}
+
+export async function showArticle(
+    req: Request<z.infer<typeof showArticleSchema>, {}, {}, {}>,
+    res: Response,
+) {
+    const article = await prisma.article.findUnique({
+        where: {
+            slug: req.params.slug,
+        },
+        include: { tags: true },
+        omit: {
+            id: true,
+            updatedAt: true,
+        },
+    })
+
+    if (!article) {
+        return res.status(404).json({ message: 'Article not found.' })
+    }
+
+    const articleService = new ArticleService()
+
+    const previewImageUrl = articleService.getImageUrl(article.previewImage)
+    const minutesToRead = articleService.getMinutesToRead(article.content)
+    const createdAt = articleService.getFormattedDate(article.createdAt)
+
+    return res.json({
+        ...article,
+        previewImageUrl,
+        minutesToRead,
+        createdAt,
+    })
 }

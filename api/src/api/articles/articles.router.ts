@@ -18,4 +18,6 @@ router.post(
     articleController.createArticle,
 )
 
+router.get('/:slug', articleController.showArticle)
+
 export default router

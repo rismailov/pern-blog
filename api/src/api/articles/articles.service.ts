@@ -2,6 +2,7 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import crypto from 'crypto'
 
 import config from '../../services/config'
+import { format } from 'date-fns'
 
 type TFile = Express.Multer.File
 
@@ -48,6 +49,10 @@ export default class ArticleService {
         const wordsCount = content.split(' ').length
         const minutesToRead = Math.ceil(wordsCount / wordsPerMinute)
 
-        return `${minutesToRead} ${minutesToRead === 1 ? 'minute' : 'minutes'} read`
+        return `${minutesToRead} ${minutesToRead === 1 ? 'min' : 'mins'} read`
+    }
+
+    getFormattedDate(date: Date): string {
+        return format(date, 'MMM d, yyyy')
     }
 }
