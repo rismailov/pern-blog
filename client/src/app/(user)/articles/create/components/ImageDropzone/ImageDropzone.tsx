@@ -47,7 +47,7 @@ export const ImageDropzone = ({
             </Dropzone>
 
             {error && (
-                <Text fz="xs" c="red" fw={500} mt={4}>
+                <Text fz="xs" c="red" mt={4}>
                     {error}
                 </Text>
             )}

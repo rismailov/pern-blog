@@ -1,15 +1,16 @@
 'use client'
 
-import { AppShell } from '@mantine/core'
 import { PropsWithChildren } from 'react'
-import { Header } from './components/Header'
+import { Hero } from '@/components/Hero'
 
 export default function MainLayout({ children }: PropsWithChildren) {
     return (
-        <AppShell>
-            <Header />
+        <>
+            <Hero />
 
-            <AppShell.Main pt="5rem">{children}</AppShell.Main>
-        </AppShell>
+            {children}
+
+            {/* <AppShell.Main pt="5rem">{children}</AppShell.Main> */}
+        </>
     )
 }

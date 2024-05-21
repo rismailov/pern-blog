@@ -1,7 +1,6 @@
 'use client'
 
-import { Anchor, Button, Container, Group, Stack, Text } from '@mantine/core'
-import Link from 'next/link'
+import { Anchor, Container, Group, Stack, Text } from '@mantine/core'
 import { PropsWithChildren } from 'react'
 import { Filters } from './components/Filters'
 import BlogContextProvider from './context'
@@ -10,17 +9,19 @@ import classes from './layout.module.css'
 export default function MainLayout({ children }: PropsWithChildren) {
     return (
         <BlogContextProvider>
-            <Container>
+            {children}
+
+            {/* <Container>
                 <Group wrap="nowrap" align="start" justify="space-between">
                     <Stack className={classes.stickyContainer}>
                         <Filters />
 
                         <Stack mt="auto" gap="0.25rem">
-                            <Text fw={500}>
+                            <Text>
                                 A full stack blog website built with PERN stack.
                             </Text>
 
-                            <Text c="dimmed" fw={500}>
+                            <Text c="dimmed">
                                 made by{' '}
                                 <Anchor
                                     inherit
@@ -41,23 +42,12 @@ export default function MainLayout({ children }: PropsWithChildren) {
                                 </Anchor>
                                 .
                             </Text>
-
-                            {/* temp! */}
-                            <Button
-                                component={Link}
-                                href="/articles/create"
-                                style={{ alignSelf: 'start' }}
-                                mt="sm"
-                                variant="outline"
-                            >
-                                Create article
-                            </Button>
                         </Stack>
                     </Stack>
 
                     {children}
                 </Group>
-            </Container>
+            </Container> */}
         </BlogContextProvider>
     )
 }

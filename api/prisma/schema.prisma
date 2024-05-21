@@ -19,12 +19,28 @@ model Article {
     createdAt    DateTime @unique @default(now())
     updatedAt    DateTime @updatedAt
 
-    tags Tag[]
+    category   Category @relation(fields: [categoryId], references: [id])
+    categoryId Int
+
+    user   User @relation(fields: [userId], references: [id])
+    userId Int
 }
 
-model Tag {
+model Category {
     id    Int    @id @default(autoincrement())
     label String @unique
+
+    articles Article[]
+}
+
+model User {
+    id        Int      @id @default(autoincrement())
+    firstName String
+    lastName  String
+    email     String
+    avatar    String
+    createdAt DateTime @unique @default(now())
+    updatedAt DateTime @updatedAt
 
     articles Article[]
 }

@@ -1,4 +1,8 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import {
+    DeleteObjectCommand,
+    PutObjectCommand,
+    S3Client,
+} from '@aws-sdk/client-s3'
 import crypto from 'crypto'
 
 import config from '../../services/config'
@@ -35,6 +39,21 @@ export default class ArticleService {
         }
 
         return false
+    }
+
+    async deleteImageFromS3(filename: string): Promise<void> {
+        try {
+            const deleteCommand = new DeleteObjectCommand({
+                Bucket: config.AWS.S3_BUCKET_NAME,
+                Key: filename,
+            })
+
+            const resp = await s3.send(deleteCommand)
+
+            console.log(resp.$metadata.httpStatusCode)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     getImageUrl(filename: string): string {

@@ -1,0 +1,19 @@
+.headerWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 11;
+}
+
+.heroInner {
+    position: relative;
+    border-radius: var(--mantine-radius-md);
+    overflow: hidden;
+}
+
+.carouselIndicators {
+    justify-content: start;
+    padding-left: rem(30px);
+    padding-bottom: rem(10px);
+}

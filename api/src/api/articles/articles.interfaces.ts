@@ -1,7 +1,5 @@
-export interface IArticleTagOut {
-    id: number
-    label: string
-}
+import { ICategoryOut } from '../categories/categories.interfaces'
+import { IUserOut } from '../users/users.interfaces'
 
 export interface IArticleOut {
     id: string
@@ -13,5 +11,6 @@ export interface IArticleOut {
     minutesToRead: string
     createdAt: string
 
-    tags: IArticleTagOut[]
+    category: ICategoryOut
+    user: IUserOut
 }

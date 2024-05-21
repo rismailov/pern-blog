@@ -1,7 +1,5 @@
 'use client'
 
-import { ImageDropzone } from '@/app/(admin)/components/ImageDropzone'
-import { TextEditor } from '@/app/(admin)/components/TextEditor'
 import axios from '@/lib/axios'
 import {
     TArticleClientIn,
@@ -19,6 +17,8 @@ import {
 } from '@mantine/core'
 import { useForm, zodResolver } from '@mantine/form'
 import { useState } from 'react'
+import { TextEditor } from './TextEditor'
+import { ImageDropzone } from './ImageDropzone'
 
 export const CreateArticleForm = () => {
     const [isLoading, setIsLoading] = useState(false)

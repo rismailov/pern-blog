@@ -1,4 +1,5 @@
 import { ColorSchemeScript, MantineProvider } from '@mantine/core'
+import '@/styles/global.css'
 import '@mantine/core/styles.css'
 import { theme } from '../../theme'
 import Providers from './providers'

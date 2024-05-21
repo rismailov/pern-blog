@@ -66,9 +66,7 @@ export const ArticlePageInner = ({ slug }: { slug: IArticleOut['slug'] }) => {
                         style={{ stroke: 'var(--mantine-color-dimmed)' }}
                     />
 
-                    <Text c="dimmed" fw={500}>
-                        {article!.minutesToRead}
-                    </Text>
+                    <Text c="dimmed">{article!.minutesToRead}</Text>
                 </Group>
 
                 {/* written at */}
@@ -78,9 +76,7 @@ export const ArticlePageInner = ({ slug }: { slug: IArticleOut['slug'] }) => {
                         style={{ stroke: 'var(--mantine-color-dimmed)' }}
                     />
 
-                    <Text c="dimmed" fw={500}>
-                        {article!.createdAt}
-                    </Text>
+                    <Text c="dimmed">{article!.createdAt}</Text>
                 </Group>
             </Group>
 

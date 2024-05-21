@@ -1,7 +1,7 @@
 import express from 'express'
 
 import articlesRouter from './articles/articles.router'
-import tagsRouter from './tags/tags.router'
+import categoriesRouter from './categories/categories.router'
 
 const router = express.Router()
 
@@ -10,6 +10,6 @@ router.get('/healthcheck', (_, res) => {
 })
 
 router.use('/articles', articlesRouter)
-router.use('/tags', tagsRouter)
+router.use('/categories', categoriesRouter)
 
 export default router

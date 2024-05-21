@@ -3,6 +3,7 @@ import { randomBytes } from 'crypto'
 import { NextFunction, Request, Response } from 'express'
 import kebabCase from 'lodash.kebabcase'
 import { z } from 'zod'
+import { faker } from '@faker-js/faker'
 
 import prisma from '../../services/prisma'
 import { IArticleOut } from './articles.interfaces'
@@ -32,7 +33,16 @@ export async function getAllArticles(
                 updatedAt: true,
                 isDraft: true,
             },
-            include: { tags: true },
+            include: {
+                category: true,
+                user: {
+                    omit: {
+                        updatedAt: true,
+                        firstName: true,
+                        lastName: true,
+                    },
+                },
+            },
             orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
             take: perPage,
             ...(req.query.cursor && {
@@ -41,13 +51,11 @@ export async function getAllArticles(
                     id: req.query.cursor,
                 },
             }),
-            ...(req.query.tags && {
+            ...(req.query.categories && {
                 where: {
-                    tags: {
-                        some: {
-                            id: {
-                                in: req.query.tags.map((id) => Number(id)),
-                            },
+                    category: {
+                        id: {
+                            in: req.query.categories.map((id) => Number(id)),
                         },
                     },
                 },
@@ -67,6 +75,13 @@ export async function getAllArticles(
             minutesToRead,
             previewImageUrl,
             createdAt,
+            user: {
+                ...article.user,
+                avatarUrl: article.user.avatar,
+                createdAt: articleService.getFormattedDate(
+                    article.user.createdAt,
+                ),
+            },
         }
     })
 
@@ -85,38 +100,41 @@ export async function createArticle(
     res: Response,
     next: NextFunction,
 ) {
+    if (!req.file) {
+        return res.status(400).json({ message: 'Preview image is required' })
+    }
+
+    let filename: string | boolean = false
+
+    const articleService = new ArticleService()
+
     try {
-        if (!req.file) {
-            return res
-                .status(400)
-                .json({ message: 'Preview image is required' })
-        }
-
-        const { tags, ...data } = req.query
-
         // upload image to s3
-        const uploadFileService = new ArticleService()
-        const filename = await uploadFileService.uploadImageToS3(req.file)
+        filename = await articleService.uploadImageToS3(req.file)
 
         if (!filename) {
             return res.status(500).send({ message: 'Error uploading file' })
         }
 
-        // save the article along with tags
+        // save the article
         const article = await prisma.article.create({
             data: {
-                title: data.title,
-                content: data.content,
-                previewText: data.previewText,
+                title: req.query.title,
+                content: req.query.content,
+                previewText: req.query.previewText,
                 previewImage: filename as string,
-                slug: `${randomBytes(3).toString('hex')}-${kebabCase(data.title)}`,
-                tags: {
-                    connectOrCreate: tags.map((tag) => {
-                        return {
-                            where: { label: tag },
-                            create: { label: tag },
-                        }
-                    }),
+                slug: `${randomBytes(3).toString('hex')}-${kebabCase(req.query.title)}`,
+                category: {
+                    connectOrCreate: {
+                        where: { label: req.query.category.toLowerCase() },
+                        create: { label: req.query.category.toLowerCase() },
+                    },
+                },
+                // TEMP! Replace with auth id
+                user: {
+                    connect: {
+                        id: faker.helpers.rangeToNumber({ min: 1, max: 20 }),
+                    },
                 },
             },
         })
@@ -124,6 +142,11 @@ export async function createArticle(
         return res.status(201).json(article)
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            // clean-up if validation failed on DB level
+            if (typeof filename === 'string') {
+                await articleService.deleteImageFromS3(filename)
+            }
+
             if (error.code === 'P2002') {
                 return res.status(400).json({
                     message: 'Article with this title already exists',
@@ -143,7 +166,7 @@ export async function showArticle(
         where: {
             slug: req.params.slug,
         },
-        include: { tags: true },
+        include: { category: true },
         omit: {
             id: true,
             updatedAt: true,

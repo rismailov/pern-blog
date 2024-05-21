@@ -8,14 +8,24 @@ import {
     Loader,
     Title,
 } from '@mantine/core'
+import { Golos_Text as FontSans } from 'next/font/google'
+
+const fontSans = FontSans({
+    subsets: ['latin'],
+    weight: ['500', '600', '700'],
+})
 
 export const theme = createTheme({
     defaultRadius: 'md',
-    primaryColor: 'red',
+    primaryColor: 'dark',
+    fontFamily: fontSans.style.fontFamily,
+    fontSizes: {
+        sm: '0.9rem',
+    },
     components: {
         Container: Container.extend({
             defaultProps: {
-                size: 'xl',
+                size: '1400px',
                 h: '100%',
             },
         }),

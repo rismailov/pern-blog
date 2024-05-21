@@ -11,7 +11,7 @@ export const Filters = () => {
 
     return (
         <Stack w="100%">
-            <Text fz="sm" fw={500}>
+            <Text fz="sm">
                 ✨ Found {articlesCount}{' '}
                 {articlesCount === 1 ? 'article' : 'articles'}.
             </Text>

@@ -1,0 +1,26 @@
+.searchRoot {
+    width: 100%;
+    max-width: 20rem;
+}
+
+.searchInput {
+    background: alpha(white, 0.2);
+    border-color: alpha(white, 0.1);
+    color: white;
+    font-weight: 400;
+
+    &::placeholder {
+        color: alpha(white, 0.6);
+    }
+
+    &:focus {
+        border-color: alpha(white, 0.5);
+    }
+}
+
+.searchInputIcon {
+    width: 1.1rem;
+    height: 1.1rem;
+    stroke-width: 2.1px;
+    stroke: alpha(white, 0.5);
+}

@@ -1,0 +1,70 @@
+.header {
+    position: relative;
+    z-index: 10;
+}
+
+.logo {
+    .logoText {
+        letter-spacing: -0.025em;
+        line-height: 1;
+        color: white;
+    }
+
+    svg {
+        stroke: white;
+    }
+}
+
+.link {
+    font-size: var(--mantine-font-size-sm);
+    color: white;
+    opacity: 0.75;
+
+    &:hover {
+        opacity: 1;
+        text-decoration: none;
+    }
+}
+
+.langSwitcherButton {
+    border-radius: var(--mantine-radius-xl);
+    padding: 0.3rem 0.7rem 0.3rem 0.5rem;
+    background: white;
+    color: var(--mantine-color-dark-8) !important;
+
+    &:hover {
+        background: alpha(white, 0.9);
+    }
+
+    svg {
+        stroke: var(--mantine-color-dark-8) !important;
+    }
+}
+
+.loginButton {
+    background: transparent;
+    padding: 0.35rem 0.8rem;
+    color: white !important;
+
+    &:hover {
+        background: alpha(white, 0.15);
+    }
+}
+
+.signUpButton {
+    font-weight: 600 !important;
+    background: white;
+    color: var(--mantine-color-dark-8) !important;
+
+    &:hover {
+        background: alpha(white, 0.9);
+    }
+}
+
+.mobileMenuButton {
+    background: transparent !important;
+
+    svg {
+        stroke: white !important;
+    }
+}
